@@ -34,7 +34,6 @@ class TitleScreen:
 
 
 class SaveRequest:
-
     @staticmethod
     def loadGame():
         try:
@@ -42,7 +41,7 @@ class SaveRequest:
             read = saveFile.readline()
 
             if read != '':
-                print("Would you like to load your save?")
+                print("\nWould you like to load your save?")
                 action = input(">")
                 if action.lower() == 'yes':
                     print("\nopening save...")
@@ -94,14 +93,17 @@ class Avatar:
     def examineStats(self):
         print("########################################################################")
         print("\nName:", self.name, "Class:", self.classType)
-        print("\n-Inventory:", "\n\tItem1:", "\n\tItem2:", "\n\tCurrency:", self.currency)
-        print("Status Effects:")
+        print("Status Effects:", None)
         print("\nType anything to return to the game.")
         print("########################################################################")
         input(">")
 
     def inventory(self):
-        pass
+        print("########################################################################")
+        print("\n-Inventory:", "\n\tItem1:", "\n\tItem2:", "\n\tCurrency:", self.currency)
+        print("\nType anything to return to the game.")
+        print("########################################################################")
+        input(">")
 
 
 class Combat:
@@ -113,6 +115,23 @@ class Combat:
 class Locations:
     @staticmethod
     def travel():
+        pass
+
+    @staticmethod
+    def explore():
+        pass
+
+    # World 1
+    @staticmethod
+    def starter_area():
+        pass
+
+    @staticmethod
+    def forest_1():
+        pass
+
+    @staticmethod
+    def forest_2():
         pass
 
 
