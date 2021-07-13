@@ -61,13 +61,6 @@ class Avatar:
         else:
             print('Invalid Location')
 
-    def fight(self, enemy):
-        print("Player is ", self.get_Name())
-        print("Enemy is ", enemy.get_Name())
-
-    # def __str__(self):
-    #     return self.__Name + self.__Hp + self.__Exp + self.__Str + self.__Mp
-
 
 class Enemy:
     def __init__(self, Name, Hp, Str, Mp):
@@ -113,18 +106,13 @@ class Enemy:
     def kill(enemy):
         active_Enemy_List.pop(enemy)
 
-    # def __str__(self):
-    #     return self.__Name + self.__Hp + self.__Exp + self.__Str + self.__Mp
 
-
-# class Combat:
-#     def __init__(self, player, npc):
-#         self.__player = player
-#         self.__npc = npc
-#
-#     def initiation(self):
-#         print("Player is ", self.__player.get_Name())
-#         print("Enemy is ", self.__npc.get_Name())
+class Combat:
+    @staticmethod
+    def initiation(player):
+        enemy = Enemy.rand_Enemy()
+        print("Player is ", player.get_Name())
+        print("Enemy is ", enemy.get_Name())
 
 
 def create_Character(Name, Hp, Exp, Str, Mp, location):
@@ -165,42 +153,53 @@ def load():
 
 class MenuGui:
     def __init__(self, player):
-        self.player = player
+        self.__player = player
 
         self.main_Window = tkinter.Tk()
 
         self.menu_Frame = tkinter.Frame(self.main_Window)
+        self.menu_Frame_Bottom = tkinter.Frame(self.main_Window)
 
         self.explore_Button = tkinter.Button(self.menu_Frame, text='Explore', command=self.explore_Callback)
         self.character_Button = tkinter.Button(self.menu_Frame, text='Character', command=self.character_Callback)
-        self.settings_Button = tkinter.Button(self.menu_Frame, text='Settings', command=self.settings_Callback)
-        self.quit_Button = tkinter.Button(self.menu_Frame, text='Quit', command=self.quit_Callback)
 
         self.explore_Button.pack(side='top')
         self.character_Button.pack(side='top')
-        self.settings_Button.pack(side='top')
-        self.quit_Button.pack(side='top')
+
+        self.space_Label = tkinter.Label(self.menu_Frame_Bottom, text='')
+        self.save_Button = tkinter.Button(self.menu_Frame_Bottom, text='Save', command=self.save_Callback)
+        self.settings_Button = tkinter.Button(self.menu_Frame_Bottom, text='Settings', command=self.settings_Callback)
+        self.quit_Button = tkinter.Button(self.menu_Frame_Bottom, text='Quit', command=self.quit_Callback)
+
+        self.space_Label.pack(side='top')
+        self.save_Button.pack(side='left')
+        self.settings_Button.pack(side='left')
+        self.quit_Button.pack(side='left')
 
         self.menu_Frame.pack()
+        self.menu_Frame_Bottom.pack()
 
         tkinter.mainloop()
 
     def explore_Callback(self):
-        pass
+        ExploreGui(self.__player)
 
     def character_Callback(self):
-        tkinter.messagebox.showinfo('Character', 'Name: ' + self.player.get_Name()
-                                    + '\nHP: ' + str(self.player.get_Hp())
-                                    + '\nEXP: ' + str(self.player.get_Exp())
-                                    + '\nStr: ' + str(self.player.get_Str())
-                                    + '\nMP: ' + str(self.player.get_Mp())
-                                    + '\nLocation: ' + self.player.get_Location())
+        tkinter.messagebox.showinfo('Character', 'Name: ' + self.__player.get_Name()
+                                        + '\nHP: ' + str(self.__player.get_Hp())
+                                        + '\nEXP: ' + str(self.__player.get_Exp())
+                                        + '\nStr: ' + str(self.__player.get_Str())
+                                        + '\nMP: ' + str(self.__player.get_Mp())
+                                        + '\nLocation: ' + self.__player.get_Location())
+
+    def save_Callback(self):
+        save(self.__player)
 
     def settings_Callback(self):
         pass
 
     def quit_Callback(self):
-        save(self.player)
+        save(self.__player)
         exit()
 
 
@@ -239,5 +238,61 @@ class CharacterCreationGui:
 
 
 class ExploreGui:
-    def __init__(self):
-        pass
+    def __init__(self, player):
+        self.__player = player
+
+        self.main_Window = tkinter.Tk()
+
+        self.button_1 = tkinter.Button(self.main_Window, text='Explore', command=self.explore_Callback)
+        self.button_2 = tkinter.Button(self.main_Window, text='return', command=self.return_Callback)
+
+        self.button_1.pack(side='top')
+        self.button_2.pack(side='top')
+
+        tkinter.mainloop()
+
+    def explore_Callback(self):
+        # add chances to either get loot, or get into a fight. for now I will just make it only combat occurance
+        FightGui(self.__player)
+
+    def return_Callback(self):
+        self.main_Window.destroy()
+
+
+class FightGui:
+    def __init__(self, player):
+        self.__player = player
+        self.main_Window = tkinter.Tk()
+
+        self.top_Frame = tkinter.Frame(self.main_Window)
+        self.bottom_Frame = tkinter.Frame(self.main_Window)
+
+        self.enemy_Variable = tkinter.StringVar()
+        self.player_Variable = tkinter.StringVar()
+        self.label_1 = tkinter.Label(self.top_Frame, textvariable=self.enemy_Variable)
+        self.label_2 = tkinter.Label(self.top_Frame, textvariable=self.player_Variable)
+
+        self.label_1.pack(side='top')
+        self.label_2.pack(side='top')
+
+        self.button_1 = tkinter.Button(self.bottom_Frame, text='fight', command=self.fight_Callback)
+        self.button_2 = tkinter.Button(self.bottom_Frame, text='Flee', command=self.flee_Callback)
+
+        self.button_1.pack(side='top')
+        self.button_2.pack(side='top')
+
+        self.top_Frame.pack()
+        self.bottom_Frame.pack()
+
+        tkinter.mainloop()
+
+    def fight_Callback(self):
+        print('hi')
+        # player_Variable, enemy_Variable = Combat.initiation(self.__player)
+        value = 'deez'
+        self.enemy_Variable.set(value)
+        self.player_Variable.set(value)
+
+    def flee_Callback(self):
+        save(self.__player)
+        self.main_Window.destroy()
