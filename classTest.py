@@ -1,10 +1,4 @@
-from game import Enemy
-from game import create_Character
-from game import load
-from game import save
-from game import Combat
-from game import MenuGui
-from game import CharacterCreationGui
+import game
 
 
 # TODO
@@ -12,28 +6,14 @@ from game import CharacterCreationGui
 #   Add loot system
 #   Leveling system
 
-# def combat(player, npc):
-#     pass
-
-
-# combat(avatar_1, enemy_1)
-
-# print(game.active_Enemy_List[0])
-# print(avatar_1)
-# print(enemy_1)
-# game.Combat.initiation(avatar_1, enemy_1)
-
-def character_Creation():
-    CharacterCreationGui()
-    main()
-
 
 def main():
-    player, player_Exists = load()
+    player, player_Exists = game.load()
     while player_Exists:
-        MenuGui(player)
+        game.MenuGui(player)
     else:
-        character_Creation()
+        game.CharacterCreationGui()
+        main()
 
 
 main()
