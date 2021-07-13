@@ -61,6 +61,10 @@ class Avatar:
         else:
             print('Invalid Location')
 
+    def fight(self, enemy):
+        print("Player is ", self.get_Name())
+        print("Enemy is ", enemy.get_Name())
+
     # def __str__(self):
     #     return self.__Name + self.__Hp + self.__Exp + self.__Str + self.__Mp
 
@@ -113,11 +117,14 @@ class Enemy:
     #     return self.__Name + self.__Hp + self.__Exp + self.__Str + self.__Mp
 
 
-class Combat:
-    @staticmethod
-    def initiation(player, npc):
-        print("Player is ", player.get_Name())
-        print("Enemy is ", npc.get_Name())
+# class Combat:
+#     def __init__(self, player, npc):
+#         self.__player = player
+#         self.__npc = npc
+#
+#     def initiation(self):
+#         print("Player is ", self.__player.get_Name())
+#         print("Enemy is ", self.__npc.get_Name())
 
 
 def create_Character(Name, Hp, Exp, Str, Mp, location):
@@ -178,8 +185,7 @@ class MenuGui:
 
         tkinter.mainloop()
 
-    @staticmethod
-    def explore_Callback():
+    def explore_Callback(self):
         pass
 
     def character_Callback(self):
@@ -190,8 +196,7 @@ class MenuGui:
                                     + '\nMP: ' + str(self.player.get_Mp())
                                     + '\nLocation: ' + self.player.get_Location())
 
-    @staticmethod
-    def settings_Callback():
+    def settings_Callback(self):
         pass
 
     def quit_Callback(self):
