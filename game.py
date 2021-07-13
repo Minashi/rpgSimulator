@@ -3,6 +3,7 @@ import pickle
 import tkinter
 import tkinter.messagebox
 
+# Lists of information
 locations = ['menu', 'explore']
 active_Enemy_List = []
 enemy_Attributes = {'Goblin': ['Goblin', 100, 10, 10],
@@ -10,6 +11,7 @@ enemy_Attributes = {'Goblin': ['Goblin', 100, 10, 10],
                     }
 
 
+# Class for player
 class Avatar:
     def __init__(self, Name, Hp, Exp, Str, Mp, location):
         self.__Name = Name
@@ -19,6 +21,7 @@ class Avatar:
         self.__Mp = Mp
         self.__Location = location
 
+# Getter methods
     def get_Name(self):
         return self.__Name
 
@@ -37,6 +40,7 @@ class Avatar:
     def get_Location(self):
         return self.__Location
 
+# Setter methods
     def set_Name(self, newName):
         self.__Name = newName
 
@@ -55,13 +59,15 @@ class Avatar:
     def set_Location(self, location):
         self.__Location = location
 
+# Might make exploring its own class, not sure yet
     def explore(self, location):
-        if location in locations:
+        if location.lower() in locations:
             self.set_Location(location)
         else:
             print('Invalid Location')
 
 
+# class for enemy NPC's
 class Enemy:
     def __init__(self, Name, Hp, Str, Mp):
         self.__name = Name
@@ -107,19 +113,69 @@ class Enemy:
         active_Enemy_List.pop(enemy)
 
 
+# Class for combat/fighting
 class Combat:
-    @staticmethod
-    def initiation(player):
+    def initiation(self, player):
+        # Player Stats
+        player_Name = player.get_Name()
+        player_Hp = player.get_Hp()
+        player_Str = player.get_Str()
+        player_Mp = player.get_Mp()
+        player_Goes_First = False
+
+        # Enemy Stats
         enemy = Enemy.rand_Enemy()
-        print("Player is ", player.get_Name())
-        print("Enemy is ", enemy.get_Name())
+        enemy_Name = enemy.get_Name()
+        enemy_Hp = enemy.get_Hp()
+        enemy_Str = enemy.get_Str()
+        enemy_Mp = enemy.get_Mp()
+        enemy_Goes_First = False
+
+        # Test
+        print("Player is ", player_Name)
+        print("Enemy is ", enemy_Name)
+
+        battle_Active = True
+
+        # Check who attacks first
+        # Will change to speed when speed is implemented
+        if player_Mp > enemy_Mp:
+            player_Goes_First = True
+        elif enemy_Mp > player_Mp:
+            enemy_Goes_First = True
+
+        # Where the magic happens
+        while battle_Active:
+            if player_Goes_First:
+                pass
+            elif enemy_Goes_First:
+                pass
+
+            # Check if player is dead
+            if player_Hp == 0 or player_Hp < 0:
+                battle_Active = False
+        else:
+            # Do this if player is dead
+            if player_Hp == 0 or player_Hp < 0:
+                pass
+            # Do this if player wins
+            else:
+                self.reward_System(player)
+
+    # Reward system if player wins
+    @staticmethod
+    def reward_System(player):
+        exp = player.get_Exp()
+        pass
 
 
+# Create a character
 def create_Character(Name, Hp, Exp, Str, Mp, location):
     player = Avatar(Name, Hp, Exp, Str, Mp, location)
     save(player)
 
 
+# Save character stats
 def save(plyr):
     FILE_NAME = 'saveFile.txt'
     again = True
@@ -133,6 +189,7 @@ def save(plyr):
     print("Data was written to ", FILE_NAME)
 
 
+# Load character stats
 def load():
     FILE_NAME = 'saveFile.txt'
     end_of_file = False
@@ -151,6 +208,7 @@ def load():
     return player_Save, player_Exists
 
 
+# Main menu Gui
 class MenuGui:
     def __init__(self, player):
         self.__player = player
@@ -195,14 +253,24 @@ class MenuGui:
     def save_Callback(self):
         save(self.__player)
 
-    def settings_Callback(self):
-        pass
+    @staticmethod
+    def settings_Callback():
+        SettingsGui()
 
     def quit_Callback(self):
         save(self.__player)
         exit()
 
 
+# Settings Gui
+class SettingsGui:
+    def __init__(self):
+        self.main_Window = tkinter.Tk()
+
+        pass
+
+
+# Gui to create character if not found in save file
 class CharacterCreationGui:
     def __init__(self):
         self.main_Window = tkinter.Tk()
@@ -237,6 +305,7 @@ class CharacterCreationGui:
         self.main_Window.destroy()
 
 
+# The explore/travel Gui
 class ExploreGui:
     def __init__(self, player):
         self.__player = player
@@ -259,6 +328,7 @@ class ExploreGui:
         self.main_Window.destroy()
 
 
+# Fight Gui
 class FightGui:
     def __init__(self, player):
         self.__player = player
