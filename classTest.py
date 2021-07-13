@@ -3,6 +3,14 @@ from game import create_Character
 from game import load
 from game import save
 from game import Combat
+from game import MenuGui
+from game import CharacterCreationGui
+
+
+# TODO
+#   Add items and rarities
+#   Add loot system
+#   Leveling system
 
 # def combat(player, npc):
 #     pass
@@ -16,21 +24,16 @@ from game import Combat
 # game.Combat.initiation(avatar_1, enemy_1)
 
 def character_Creation():
-    print("Hello! Welcome to my game. This is a test.")
-    Name = input('Name: ')
-    create_Character(Name, 10, 0, 10, 10)
+    CharacterCreationGui()
+    main()
 
 
 def main():
-    character_Creation()
-    player = load()
-    print(player.get_name())
-    enemy = Enemy.rand_Enemy()
-    Combat.initiation(player, enemy)
+    player, player_Exists = load()
+    while player_Exists:
+        MenuGui(player)
+    else:
+        character_Creation()
 
 
 main()
-
-# player = game.load()
-#
-
