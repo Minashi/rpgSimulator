@@ -49,3 +49,8 @@ def start_Thread():
 
 start_Thread()
 main()
+
+
+def ADD10():
+    while True:
+        ADD10()
