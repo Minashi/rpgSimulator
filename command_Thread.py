@@ -36,6 +36,7 @@ class CommandClass:
             else:
                 print("Command unrecognized")
 
-    def close_Thread(self):
+    @staticmethod
+    def close_Thread():
         # main.close_Game()
         sys.exit()
