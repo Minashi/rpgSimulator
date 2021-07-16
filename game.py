@@ -1,13 +1,13 @@
 import random
-import pickle
 import tkinter
 import tkinter.messagebox
+import data_Handling
 
 # Lists of information
 locations = ['menu', 'explore']
 active_Enemy_List = []
-enemy_Attributes = {'Goblin': ['Goblin', 100, 10, 10],
-                    'Ogre': ['Ogre', 200, 50, 0]
+enemy_Attributes = {'Goblin': ['Goblin', 100, 5, 10],
+                    'Ogre': ['Ogre', 100, 5, 0]
                     }
 
 
@@ -21,7 +21,7 @@ class Avatar:
         self.__Mp = Mp
         self.__Location = location
 
-# Getter methods
+    # Getter methods
     def get_Name(self):
         return self.__Name
 
@@ -40,7 +40,7 @@ class Avatar:
     def get_Location(self):
         return self.__Location
 
-# Setter methods
+    # Setter methods
     def set_Name(self, newName):
         self.__Name = newName
 
@@ -59,7 +59,7 @@ class Avatar:
     def set_Location(self, location):
         self.__Location = location
 
-# Might make exploring its own class, not sure yet
+    # Might make exploring its own class, not sure yet
     def explore(self, location):
         if location.lower() in locations:
             self.set_Location(location)
@@ -67,7 +67,7 @@ class Avatar:
             print('Invalid Location')
 
 
-# class for enemy NPC's
+# class for enemy NPCs
 class Enemy:
     def __init__(self, Name, Hp, Str, Mp):
         self.__name = Name
@@ -81,8 +81,8 @@ class Enemy:
     def set_Hp(self, hp):
         self.__hp = hp
 
-    def set_Str(self, str):
-        self.__Str = str
+    def set_Str(self, Str):
+        self.__Str = Str
 
     def set_Mp(self, mp):
         self.__Mp = mp
@@ -108,104 +108,103 @@ class Enemy:
         active_Enemy_List.append(enemy)
         return enemy
 
-    @staticmethod
-    def kill(enemy):
-        active_Enemy_List.pop(enemy)
+    # Broken ATM
+    # @staticmethod
+    # def kill(enemy):
+    #     active_Enemy_List.pop(enemy)
 
 
 # Class for combat/fighting
 class Combat:
-    def initiation(self, player):
+
+    @staticmethod
+    def initiation(player):
         # Player Stats
-        player_Name = player.get_Name()
-        player_Hp = player.get_Hp()
-        player_Str = player.get_Str()
-        player_Mp = player.get_Mp()
         player_Goes_First = False
 
         # Enemy Stats
         enemy = Enemy.rand_Enemy()
-        enemy_Name = enemy.get_Name()
-        enemy_Hp = enemy.get_Hp()
-        enemy_Str = enemy.get_Str()
-        enemy_Mp = enemy.get_Mp()
         enemy_Goes_First = False
 
         # Test
-        print("Player is ", player_Name)
-        print("Enemy is ", enemy_Name)
+        print("Player is ", player.get_Name())
+        print("Enemy is ", enemy.get_Name())
 
         battle_Active = True
 
         # Check who attacks first
         # Will change to speed when speed is implemented
-        if player_Mp > enemy_Mp:
+        if player.get_Mp() > enemy.get_Mp():
             player_Goes_First = True
-        elif enemy_Mp > player_Mp:
+        elif player.get_Mp() > enemy.get_Mp():
             enemy_Goes_First = True
 
         # Where the magic happens
         while battle_Active:
-            if player_Goes_First:
-                pass
-            elif enemy_Goes_First:
-                pass
+            if player.get_Hp() > 0:
+                if player_Goes_First:
+                    damage = player.get_Str()
+                    enemy_Health = enemy.get_Hp()
+                    enemy_Health -= damage
+                    print("Player attacked")
+                    enemy.set_Hp(enemy_Health)
+
+                    # make condition to check if enemy is dead before attacking player
+                    if enemy.get_Hp() > 0:
+                        damage = enemy.get_Str()
+                        player_Health = player.get_Hp()
+                        player_Health -= damage
+                        print("Enemy attacked")
+                        player.set_Hp(player_Health)
+                    else:
+                        print("Enemy has 0 or less health")
+                elif enemy_Goes_First:
+                    if enemy.get_Hp() > 0:
+                        damage = enemy.get_Str()
+                        player_Health = player.get_Hp()
+                        player_Health -= damage
+                        print("Enemy attacked")
+                        player.set_Hp(player_Health)
+
+                        if player.get_Hp > 0:
+                            damage = player.get_Str()
+                            enemy_Health = enemy.get_Hp()
+                            enemy_Health -= damage
+                            print("Player attacked")
+                            enemy.set_Hp(enemy_Health)
+                        else:
+                            print("Player has 0 or less health")
+            else:
+                print("Player has 0 or less health")
 
             # Check if player is dead
-            if player_Hp == 0 or player_Hp < 0:
+            if player.get_Hp() <= 0 or enemy.get_Hp() <= 0:
+                print("Battle over, set battle_Active False")
                 battle_Active = False
         else:
             # Do this if player is dead
-            if player_Hp == 0 or player_Hp < 0:
-                pass
+            if player.get_Hp() <= 0:
+                # add death screen eventually
+                data_Handling.save(player)
+                exit()
             # Do this if player wins
-            else:
-                self.reward_System(player)
+            elif enemy.get_Hp() <= 0:
+                # Enemy.kill(enemy)
+                print("Giving award to player")
+                Combat.reward_System(player)
 
     # Reward system if player wins
     @staticmethod
     def reward_System(player):
         exp = player.get_Exp()
-        pass
+        exp += 10
+        player.set_Exp(exp)
 
 
 # Create a character
 def create_Character(Name, Hp, Exp, Str, Mp, location):
     player = Avatar(Name, Hp, Exp, Str, Mp, location)
-    save(player)
-
-
-# Save character stats
-def save(plyr):
-    FILE_NAME = 'saveFile.txt'
-    again = True
-    output_file = open(FILE_NAME, 'wb')
-
-    while again:
-        pickle.dump(plyr, output_file)
-        again = False
-
-    output_file.close()
-    print("Data was written to ", FILE_NAME)
-
-
-# Load character stats
-def load():
-    FILE_NAME = 'saveFile.txt'
-    end_of_file = False
-    player_Exists = False
-    player_Save = None
-    input_file = open(FILE_NAME, 'rb')
-
-    while not end_of_file:
-        try:
-            player_Save = pickle.load(input_file)
-            player_Exists = True
-        except EOFError:
-            end_of_file = True
-
-    input_file.close()
-    return player_Save, player_Exists
+    data_Handling.save(player)
 
 
 # Main menu Gui
@@ -244,21 +243,21 @@ class MenuGui:
 
     def character_Callback(self):
         tkinter.messagebox.showinfo('Character', 'Name: ' + self.__player.get_Name()
-                                        + '\nHP: ' + str(self.__player.get_Hp())
-                                        + '\nEXP: ' + str(self.__player.get_Exp())
-                                        + '\nStr: ' + str(self.__player.get_Str())
-                                        + '\nMP: ' + str(self.__player.get_Mp())
-                                        + '\nLocation: ' + self.__player.get_Location())
+                                    + '\nHP: ' + str(self.__player.get_Hp())
+                                    + '\nEXP: ' + str(self.__player.get_Exp())
+                                    + '\nStr: ' + str(self.__player.get_Str())
+                                    + '\nMP: ' + str(self.__player.get_Mp())
+                                    + '\nLocation: ' + self.__player.get_Location())
 
     def save_Callback(self):
-        save(self.__player)
+        data_Handling.save(self.__player)
 
     @staticmethod
     def settings_Callback():
         SettingsGui()
 
     def quit_Callback(self):
-        save(self.__player)
+        data_Handling.save(self.__player)
         exit()
 
 
@@ -346,10 +345,10 @@ class FightGui:
         self.label_2.pack(side='top')
 
         self.button_1 = tkinter.Button(self.bottom_Frame, text='fight', command=self.fight_Callback)
-        self.button_2 = tkinter.Button(self.bottom_Frame, text='Flee', command=self.flee_Callback)
+        self.flee_Button = tkinter.Button(self.bottom_Frame, text='Flee', command=self.flee_Callback)
 
         self.button_1.pack(side='top')
-        self.button_2.pack(side='top')
+        self.flee_Button.pack(side='top')
 
         self.top_Frame.pack()
         self.bottom_Frame.pack()
@@ -357,12 +356,12 @@ class FightGui:
         tkinter.mainloop()
 
     def fight_Callback(self):
-        print('hi')
+        Combat.initiation(self.__player)
+        value = 'Deez'
         # player_Variable, enemy_Variable = Combat.initiation(self.__player)
-        value = 'deez'
         self.enemy_Variable.set(value)
         self.player_Variable.set(value)
 
     def flee_Callback(self):
-        save(self.__player)
+        data_Handling.save(self.__player)
         self.main_Window.destroy()
