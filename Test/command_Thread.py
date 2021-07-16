@@ -1,6 +1,3 @@
-import threading
-import game
-from time import sleep
 import sys
 
 commands_List = ['give_health', 'give_xp', 'kill', 'exit']

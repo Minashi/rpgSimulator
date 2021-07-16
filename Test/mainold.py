@@ -37,7 +37,7 @@ class SaveRequest:
     @staticmethod
     def loadGame():
         try:
-            saveFile = open('saveFile.txt', 'r')
+            saveFile = open('../main/saveFile.txt', 'r')
             read = saveFile.readline()
 
             if read != '':
@@ -71,7 +71,7 @@ class SaveRequest:
     def saveGame():
         print("saving game...")
         currency = str(player.currency)
-        newSaveFile = open('saveFile.txt', 'w')
+        newSaveFile = open('../main/saveFile.txt', 'w')
 
         newSaveFile.write(player.name)
         newSaveFile.write('\n')
