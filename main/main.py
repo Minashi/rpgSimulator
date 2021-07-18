@@ -3,15 +3,13 @@ from tkinter import Tk
 from data_Handling import load
 
 # TODO
-#   Add items and rarities
-#   Add loot system
 #   Leveling system
-#   add death screen eventually
+#   add death screen eventually (192 fix)
 #   Fix kill method in Enemy class
 #   Make a load menu showing all available saves with a list box
 #   Allow more then 1 save
-#   Check why player keeps getting roasted by enemies
-#   Fix throwing error on line 274
+#   Figure out why name is not printing right on menu (HP is being printed as name for some reason)
+#   Add ability to heal
 
 list_Of_Threads = []
 

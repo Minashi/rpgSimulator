@@ -1,6 +1,8 @@
 import random
-from data_Handling import save
+from tkinter import Tk
 
+from data_Handling import save
+import gui
 
 # Lists of information
 locations = ['menu', 'explore']
@@ -65,6 +67,9 @@ class Avatar:
         else:
             print('Invalid Location')
 
+    def level_Up(self):
+        pass
+
 
 # class for enemy NPCs
 class Enemy:
@@ -107,10 +112,9 @@ class Enemy:
         active_Enemy_List.append(enemy)
         return enemy
 
-    # Broken ATM
-    # @staticmethod
-    # def kill(enemy):
-    #     active_Enemy_List.pop(enemy)
+    @staticmethod
+    def kill(enemy):
+        active_Enemy_List.remove(enemy)
 
 
 # Class for combat/fighting
@@ -186,6 +190,11 @@ class Combat:
                 # add death screen eventually
                 print("Player lost all health...")
                 exit()
+                # I dunno how I will do this
+                # root = Tk()
+                # root.geometry("300x300+500+250")
+                # app = gui.DeathScreenGui()
+                # root.mainloop()
             # Do this if player wins
             elif enemy.get_Hp() <= 0:
                 # Enemy.kill(enemy)
